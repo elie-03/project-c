@@ -2,289 +2,320 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max 50
+#define NOMBRE_MAXIMUN_D_ETUDIANT 100
 
 ///===============les declaration============= 
- int i,n,nb,j,choix,netudiant;
+int nombre_d_etudiant_sauvegarder, choix;
 
-  struct etudiants{
-      int num;
-      char nom[30],prenom[30],filiere[30];
-      float moy;
-    };
+struct Etudiant{
+    int numero_d_inscription;
+    char nom[30], prenom[30], filiere[30];
+    float moyenne;
+};
 
- struct etudiants les_etudiants[max];
+struct Etudiant list_des_etudiant[NOMBRE_MAXIMUN_D_ETUDIANT];
 
-  struct trier{
-        int z;
-        char znom[30],zprenom[30],zfiliere[30];
-        float zmoy;
-    };
+struct trier{
+    int z;
+    char znom[30], zprenom[30], zfiliere[30];
+    float zmoy;
+};
 
-struct trier trier[max];
+struct trier trier[NOMBRE_MAXIMUN_D_ETUDIANT];
+
+void sauvegarder_la_liste_des_etudiant() {
+    FILE * file = fopen("./data/sauvegarde", "wb");
+    fwrite(list_des_etudiant, sizeof(struct Etudiant), NOMBRE_MAXIMUN_D_ETUDIANT, file);
+    fclose(file);
+}
+
+void charger_la_liste_des_etudiant() {
+    FILE * file = fopen("./data/sauvegarde", "rb");
+    fread(list_des_etudiant, sizeof(struct Etudiant), NOMBRE_MAXIMUN_D_ETUDIANT, file);
+    fclose(file);
+}
+
+void recuperer_le_nombre_d_etudiant_sauvegarder() {
+    FILE * file = fopen("data/configuration", "r");
+    fscanf(file, "%d", &nombre_d_etudiant_sauvegarder);
+    fclose(file);
+}
+
+int sauvegarder_le_nombre_d_etudiant_sauvegarder() {
+    FILE * file = fopen("./data/configuration", "w");
+    fprintf(file, "%d", nombre_d_etudiant_sauvegarder);
+    fclose(file);
+}
+
+void charger_savegarde() {
+    FILE * file = fopen("sauvegarde.data", "a+");
+    signed char data[255];
+    fgets(data, 255, file);
+    printf("%s data");
+    fclose(file);
+}
 
 ///========procedure de saisie==============
- void saisie_une_etudiant(){
-
-printf("\n\n");
-printf("Saisir les information de votre etudiant :  \n\n");
-printf("Nemuro d'inscreption : ");
-scanf("%d",&les_etudiants[n+1].num);
-printf("Nom : ");
-scanf("%s",&les_etudiants[n+1].nom);
-printf("Prenom : ");
-scanf("%s",&les_etudiants[n+1].prenom);
-printf("Moyenne : ");
-scanf("%f",&les_etudiants[n+1].moy);
-printf("Filiere : ");
-scanf("%s",&les_etudiants[n+1].filiere);
-n=n+1;
-printf("\n\n");}
+void ajouter_un_etudiant() {
+    printf("Nemuro d'inscreption : ");
+    scanf("%d", &list_des_etudiant[nombre_d_etudiant_sauvegarder].numero_d_inscription);
+    printf("Nom : ");
+    scanf("%s", &list_des_etudiant[nombre_d_etudiant_sauvegarder].nom);
+    printf("Prenom : ");
+    scanf("%s", &list_des_etudiant[nombre_d_etudiant_sauvegarder].prenom);
+    printf("Moyenne : ");
+    scanf("%f", &list_des_etudiant[nombre_d_etudiant_sauvegarder].moyenne);
+    printf("Filiere : ");
+    scanf("%s", &list_des_etudiant[nombre_d_etudiant_sauvegarder].filiere);
+    nombre_d_etudiant_sauvegarder++;
+}
                                    
-void saisir_plusieur_etudiants(){
-   printf("Entrer le nombre des etudiants que vous voullias saisie : ");
-   scanf("%d",&nb);
-   printf("\n\n");
+void ajouter_plusieur_etudiants() {
+    int nombre_d_etudiant_a_ajouter;
+    printf("Entrer le nombre des etudiants que vous voullez ajouter: ");
+    scanf("%d", &nombre_d_etudiant_a_ajouter);
 
- for(i=1;i<=nb;i++){
-
-      printf("Saisir les information de l'etudiant numero %d :  \n\n",n+1);
-      printf("Nemuro d'inscreption : ");
-      scanf("%d",&les_etudiants[n+1].num);
-      printf("Nom : ");
-      scanf("%s",&les_etudiants[n+1].nom);
-      printf("Prenom : ");
-      scanf("%s",&les_etudiants[n+1].prenom);
-      printf("Moyenne : ");
-      scanf("%f",&les_etudiants[n+1].moy);
-      printf("Filiere : ");
-      scanf("%s",&les_etudiants[n+1].filiere);
-         n=n+1;
-  }}
-
-
-void afficher_les_etudiants(){
-
-    for(i=1;i<=n;i++){
-        printf("L etudient Num :%d Son Nom : %s & Prenom : %s & Moy : %.2f & Filiere : %s \n\n",les_etudiants[i].num,les_etudiants[i].nom,les_etudiants[i].prenom,les_etudiants[i].moy,les_etudiants[i].filiere);
+    for(int i=0; i < nombre_d_etudiant_a_ajouter; i++) {
+        printf("\nSaisir les information de l'etudiant numero %d :  \n", i + 1);
+        printf("Nemuro d'inscreption : ");
+        scanf("%d",&list_des_etudiant[nombre_d_etudiant_sauvegarder].numero_d_inscription);
+        printf("Nom : ");
+        scanf("%s",&list_des_etudiant[nombre_d_etudiant_sauvegarder].nom);
+        printf("Prenom : ");
+        scanf("%s",&list_des_etudiant[nombre_d_etudiant_sauvegarder].prenom);
+        printf("Moyenne : ");
+        scanf("%f",&list_des_etudiant[nombre_d_etudiant_sauvegarder].moyenne);
+        printf("Filiere : ");
+        scanf("%s",&list_des_etudiant[i].filiere);
+        nombre_d_etudiant_sauvegarder++;
     }
 }
 
-void rechercher_une_etudiant_par_num(){
-      int num;
-      printf(" Saisir un numero : ");
-      scanf("%d",&num);
 
-       for(i=1;i<=n;i++){
-
-           if(les_etudiants[i].num==num){
-                  printf("\nRechercher un etudiant par sa numero : \n");
-                  printf("Qullque informations sur les etudiants que vous avez recherche : \n");
-                  printf("----------------------------------\n");
-                  printf("Numero d'inscription : %d\n",num);
-                  printf("Nom : %s\n",les_etudiants[i].nom);
-                  printf("Prenom : %s\n",les_etudiants[i].prenom);
-                  printf("Moyenne : %0.2f\n\n",les_etudiants[i].moy);
-             }
-         }
+void afficher_list_des_etudiant(){
+    printf("-------------------------------------------------------------------------------\n");
+    for(int i=0; i < nombre_d_etudiant_sauvegarder; i++) {
+        printf("Numero dinscription: %d\n", list_des_etudiant[i].numero_d_inscription);
+        printf("Prenom: %s\n", list_des_etudiant[i].prenom);
+        printf("Nom: %s\n", list_des_etudiant[i].nom);
+        printf("Moyenne: %.2f\n", list_des_etudiant[i].moyenne);
+        printf("Filiere: %s\n", list_des_etudiant[i].filiere);
+        printf("-------------------------------------------------------------------------------\n");
+    }
 }
 
-void rechercher_un_etudiant_par_nom(){
+void recherche_etudiant_par_numero_d_inscription(){
+    int numero_a_recherche;
+    printf("Entrez le numero d'inscrption: ");
+    scanf("%d", &numero_a_recherche);
 
-      printf("\nRechercher un etudiant par sa nom :\n");
-      printf("--------------------------\n");
-      char nom[15];
-      printf("Entrer le nom d'etudiant : ");
-      scanf("%s",&nom);
-
-       for(i=1;i<=n;i++){
-          if(strcmp(les_etudiants[i].nom,nom)==0){
-
-             printf("\nRechercher par le nom : \n");
-             printf("--------------------");
-             printf("Informations sur l'etudient (%s) :\n",nom);
-             printf("----------------------------------\n");
-             printf("Numero d'inscription : %d\n",les_etudiants[i].num);
-             printf("Nom : %s\n",les_etudiants[i].nom);
-             printf("Prenom : %s\n",les_etudiants[i].prenom);
-             printf("Moyenne : %0.2f\n",les_etudiants[i].moy);
-             printf("Filiere : %s\n",les_etudiants[i].filiere);
-          }
-  }
+    for(int i=0; i < nombre_d_etudiant_sauvegarder; i++){
+        if(list_des_etudiant[i].numero_d_inscription == numero_a_recherche){
+            printf("----------------------------------\n");
+            printf("Numero d'inscription : %d\n", numero_a_recherche);
+            printf("Nom : %s\n",list_des_etudiant[i].nom);
+            printf("Prenom : %s\n",list_des_etudiant[i].prenom);
+            printf("Moyenne : %0.2f\n\n",list_des_etudiant[i].moyenne);
+            printf("Filiaire : %0.2f\n\n",list_des_etudiant[i].filiere);
+        }
+    }
 }
 
-void rechercher_un_etudiant_par_prn(){
+void rechercher_un_etudiant_par_nom() {
+    printf("\nRechercher un etudiant par sa nom :\n");
+    printf("--------------------------\n");
+    char nom[30];
+    printf("Entrer le nom d'etudiant : ");
+    scanf("%s",&nom);
 
-     printf("\nRechercher un etudiant par sa prenom : \n");
-     printf("---------------------------");
-     char prenom[15];
-     printf("Saisir un prenom : ");
-     scanf("%s",&prenom);
-
-     for(i=1;i<=n;i++){
-
-         if(strcmp(les_etudiants[i].prenom,prenom)==0){
-
-                printf("\nInformations sur l'etudient (%s) :\n",prenom);
-                printf("----------------------------------\n");
-                printf("Numero d'inscription : %d\n",les_etudiants[i].num);
-                printf("Nom : %s\n",les_etudiants[i].nom);
-                printf("Prenom : %s\n",les_etudiants[i].prenom);
-                printf("Moyenne : %0.2f\n",les_etudiants[i].moy);
-                printf("Filiere : %s\n",les_etudiants[i].filiere);
-           }
-       }
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++) {
+        if(strcmp(list_des_etudiant[i].nom,nom) == 0) {
+            printf("--------------------");
+            printf("Informations sur l'etudient (%s) :\n", nom);
+            printf("----------------------------------\n");
+            printf("Numero d'inscription : %d\n",list_des_etudiant[i].numero_d_inscription);
+            printf("Nom : %s\n",list_des_etudiant[i].nom);
+            printf("Prenom : %s\n",list_des_etudiant[i].prenom);
+            printf("Moyenne : %0.2f\n",list_des_etudiant[i].moyenne);
+            printf("Filiere : %s\n",list_des_etudiant[i].filiere);
+        }
+    }
 }
-void afficher_les_etudiants_admet(){
 
-    int j,k=1;
+void rechercher_un_etudiant_par_prenom(){
+
+    printf("\nRechercher un etudiant par sa prenom : \n");
+    printf("---------------------------");
+    char prenom[15];
+    printf("Saisir un prenom : ");
+    scanf("%s", &prenom);
+
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++){
+
+        if(strcmp(list_des_etudiant[i].prenom,prenom)==0){
+
+            printf("\nInformations sur l'etudient (%s) :\n",prenom);
+            printf("----------------------------------\n");
+            printf("Numero d'inscription : %d\n",list_des_etudiant[i].numero_d_inscription);
+            printf("Nom : %s\n",list_des_etudiant[i].nom);
+            printf("Prenom : %s\n",list_des_etudiant[i].prenom);
+            printf("Moyenne : %0.2f\n",list_des_etudiant[i].moyenne);
+            printf("Filiere : %s\n",list_des_etudiant[i].filiere);
+        }
+    }
+}
+
+void afficher_list_des_etudiant_admis() {
+
     printf("\n\nLes etudiant admest sont : \n\n");
 
-     for(i=1;i<=n;i++){
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++){
 
-           if(les_etudiants[i].moy>10){
+        if(list_des_etudiant[i].moyenne > 10){
 
-               printf("Numero d'inscription : %d\n",les_etudiants[i].num);
-               printf("Nom : %s\n",les_etudiants[i].nom);
-               printf("Prenom : %s\n",les_etudiants[i].prenom);
-               printf("Moyenne : %0.2f\n",les_etudiants[i].moy);
-               printf("Filiere : %s\n",les_etudiants[i].filiere);
-            }
-       }
+            printf("Numero d'inscription : %d\n",list_des_etudiant[i].numero_d_inscription);
+            printf("Nom : %s\n",list_des_etudiant[i].nom);
+            printf("Prenom : %s\n",list_des_etudiant[i].prenom);
+            printf("Moyenne : %0.2f\n",list_des_etudiant[i].moyenne);
+            printf("Filiere : %s\n",list_des_etudiant[i].filiere);
+        }
+    }
 }
 
 void afficher_les_etudiant_d_une_filiere(){
 
-     char filiere[15];
-     printf("Saisir une filiere : ");
-     scanf("%s",&filiere);
-     printf("Les etudiants de la filiere %s sont : \n\n",filiere);
+    char filiere[15];
+    printf("Saisir une filiere : ");
+    scanf("%s", &filiere);
+    printf("Les etudiants de la filiere %s sont : \n\n", filiere);
 
-     for(i=1;i<=n;i++){
-           if(strcmp(les_etudiants[i].filiere,filiere)==0){
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++){
+        if(strcmp(list_des_etudiant[i].filiere, filiere) == 0){
+            printf("Numero d'inscription : %d\n",list_des_etudiant[i].numero_d_inscription);
+            printf("Nom : %s\n",list_des_etudiant[i].nom);
+            printf("Prenom : %s\n",list_des_etudiant[i].prenom);
+            printf("Moyenne : %0.2f\n",list_des_etudiant[i].moyenne);
+            printf("Filiere : %s\n",list_des_etudiant[i].filiere);
+        }
+    }
+}
 
-             printf("Numero d'inscription : %d\n",les_etudiants[i].num);
-             printf("Nom : %s\n",les_etudiants[i].nom);
-             printf("Prenom : %s\n",les_etudiants[i].prenom);
-             printf("Moyenne : %0.2f\n",les_etudiants[i].moy);
-             printf("Filiere : %s\n",les_etudiants[i].filiere);
-}}}
 
 
+void modifier_un_etudiant(){
+    int num,k;
+    printf("Saisir la numero d insctiption de l etudient que vous voulai modifier : ");
+    scanf("%d", &num);
 
-void modifier(){
-     int num,k;
-     printf("Saisir la numero d insctiption de l etudient que vous voulai modifier : ");
-     scanf("%d",&num);
-
-     for(i=1;i<=n;i++){
-           if(les_etudiants[i].num==num){
-                   k=i;
-      }}
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++){
+        if(list_des_etudiant[i].numero_d_inscription == num){
+            k=i;
+        }
+    }
     printf("Nemuro d'inscreption : ");
-    scanf("%d",&les_etudiants[k].num);
+    scanf("%d",&list_des_etudiant[k].numero_d_inscription);
     printf("Nom : ");
-    scanf("%s",&les_etudiants[k].nom);
+    scanf("%s",&list_des_etudiant[k].nom);
     printf("Prenom : ");
-    scanf("%s",&les_etudiants[k].prenom);
+    scanf("%s",&list_des_etudiant[k].prenom);
     printf("Moyenne : ");
-    scanf("%f",&les_etudiants[k].moy);
+    scanf("%f",&list_des_etudiant[k].moyenne);
     printf("Filiere : ");
-    scanf("%s",&les_etudiants[k].filiere);
+    scanf("%s",&list_des_etudiant[k].filiere);
  }
 
-void supprimer(){
+void supprimer_un_etudiant(){
 
-     int j,num,k;
-     printf("Saisir le numero d insctiption de l etudient que vous voulai supprimier : ");
-     scanf("%d",&num);
+    int j,num,k;
+    printf("Saisir le numero d insctiption de l etudient que vous voulai supprimier : ");
+    scanf("%d",&num);
 
-     for(i=1;i<=n;i++){
-         if(les_etudiants[i].num==num){
-                k=i;
-                n=n-1;
-                for(j=k;j<=n;j++){
-                            les_etudiants[j]=les_etudiants[j+1];
-                 }
-     }}}
+    for(int i = 0; i < nombre_d_etudiant_sauvegarder; i++){
+        if(list_des_etudiant[i].numero_d_inscription == num) {
+            k=i;
+            nombre_d_etudiant_sauvegarder--;
+            for( j=k ;j <= nombre_d_etudiant_sauvegarder; j++){
+                list_des_etudiant[j]=list_des_etudiant[j+1];
+            }
+        }
+    }
+}
 
-void trierr(){
-     int h,t;
-     do{
-            h=0;
-            for(i=1;i<=n-1;i++){
-                     if(les_etudiants[i].num>les_etudiants[i+1].num){
-                     trier[i].z=les_etudiants[i].num;
-                     strcpy(trier[i].znom,les_etudiants[i].nom);
-                     strcpy( trier[i].zprenom,les_etudiants[i].prenom);
-                      trier[i].zmoy=les_etudiants[i].moy;
-                     strcpy( trier[i].zfiliere,les_etudiants[i].filiere);
-                     les_etudiants[i].num=les_etudiants[i+1].num;
-                     strcpy( les_etudiants[i].nom,les_etudiants[i+1].nom);
-                     strcpy( les_etudiants[i].prenom,les_etudiants[i+1].prenom);
-                      les_etudiants[i].moy=les_etudiants[i+1].moy;
-                     strcpy( les_etudiants[i].filiere,les_etudiants[i+1].filiere);
-                      les_etudiants[i+1].num=trier[i].z;
-                    strcpy(  les_etudiants[i+1].nom, trier[i].znom);
-                     strcpy( les_etudiants[i+1].prenom,trier[i].zprenom);
-                      les_etudiants[i+1].moy=trier[i].zmoy;
-                     strcpy( les_etudiants[i+1].filiere,trier[i].zfiliere);
-                     h++;}
-                     }
-        }while(h!=0);
-     printf("Les etudiant trier par numero : \n\n");
-     for(i=1;i<=n;i++){
-                       printf(" %d     %d     %s      %s      %.2f      %s   \n\n",i,les_etudiants[i].num,les_etudiants[i].nom,les_etudiants[i].prenom,les_etudiants[i].moy,les_etudiants[i].filiere);
-                       }
-     }
+// void trierr(){
+//      int h,t;
+//      do{
+//             h=0;
+//             for(i=1;i<=n-1;i++){
+//                      if(list_des_etudiant[i].num>list_des_etudiant[i+1].num){
+//                      trier[i].z=list_des_etudiant[i].num;
+//                      strcpy(trier[i].znom,list_des_etudiant[i].nom);
+//                      strcpy( trier[i].zprenom,list_des_etudiant[i].prenom);
+//                       trier[i].zmoy=list_des_etudiant[i].moy;
+//                      strcpy( trier[i].zfiliere,list_des_etudiant[i].filiere);
+//                      list_des_etudiant[i].num=list_des_etudiant[i+1].num;
+//                      strcpy( list_des_etudiant[i].nom,list_des_etudiant[i+1].nom);
+//                      strcpy( list_des_etudiant[i].prenom,list_des_etudiant[i+1].prenom);
+//                       list_des_etudiant[i].moy=list_des_etudiant[i+1].moy;
+//                      strcpy( list_des_etudiant[i].filiere,list_des_etudiant[i+1].filiere);
+//                       list_des_etudiant[i+1].num=trier[i].z;
+//                     strcpy(  list_des_etudiant[i+1].nom, trier[i].znom);
+//                      strcpy( list_des_etudiant[i+1].prenom,trier[i].zprenom);
+//                       list_des_etudiant[i+1].moy=trier[i].zmoy;
+//                      strcpy( list_des_etudiant[i+1].filiere,trier[i].zfiliere);
+//                      h++;}
+//                      }
+//         }while(h!=0);
+//      printf("Les etudiant trier par numero : \n\n");
+//      for(i=1;i<=n;i++){
+//                        printf(" %d     %d     %s      %s      %.2f      %s   \n\n",i,list_des_etudiant[i].num,list_des_etudiant[i].nom,list_des_etudiant[i].prenom,list_des_etudiant[i].moy,list_des_etudiant[i].filiere);
+//                        }
+//      }
+
 void quitter(){
-     system("cls");
- printf("\n\n        \t------------FIN-----------\n\n\n");
- printf("\n\n        \t------------MERCI-----------\n\n\n");
- }
+    sauvegarder_la_liste_des_etudiant();
+    sauvegarder_le_nombre_d_etudiant_sauvegarder();
+}
 
 int main(int argc, char *argv[])
 {
-  system("color 1A");
-do{
-           printf("\n        *******      Gestion des etudiants    ****** \n\n");
-           printf("          ============================================= \n\n");
-                     printf("  Totale des eleves : %d\n\n",n);
-           printf("      <1.  Saisir un etudaint------------------------------ \n");
-           printf("      <2.  Saisir plusiurs etudiants----------------------- \n");
-           printf("      <3.  Afficher la list des etudiants------------------ \n");
-           printf("      <4.  Rechercher un etudiant par numero--------------- \n");
-           printf("      <5.  Rechercher un etudiant par nom------------------ \n");
-           printf("      <6.  Rechercher un etudiants par prenom-------------- \n");
-           printf("      <7.  Afficher les etudiants admet-------------------- \n");
-           printf("      <8.  Afficher les etudiants d'une filiairexxw-------- \n");
-           printf("      <9.  Modifier un etudiant---------------------------- \n");
-           printf("      <10. Supprimier un etudiant-------------------------- \n");
-           printf("      <11. Trier les etudiants----------------------------- \n");
-           printf("      <12.  Quitter---------------------------------------- \n");
-           printf("          ============================================== \n\n");
-           printf("Entre votre choix : ");
-           scanf("%d",&choix);
-           printf("\n\n");
-           switch(choix){
-case 1: system("cls");saisie_une_etudiant();break;
-case 2: system("cls");saisir_plusieur_etudiants();break;
-case 3: system("cls");afficher_les_etudiants();break;
-case 4: system("cls");rechercher_une_etudiant_par_num();break;
-case 5: system("cls");rechercher_un_etudiant_par_nom();break;
-case 6: system("cls");rechercher_un_etudiant_par_prn();break;
-case 7: system("cls");afficher_les_etudiants_admet();break;
-case 8: system("cls");afficher_les_etudiant_d_une_filiere();break;
-case 9: system("cls");modifier();break;
-case 10:system("cls");supprimer();break;
-case 11:system("cls");trierr();break;
-case 12:system("cls");quitter();break;
-default : system("cls");printf("votre choix n'est pas valide !!!\n");
+    system("color 1A");
+    recuperer_le_nombre_d_etudiant_sauvegarder();
+    charger_la_liste_des_etudiant();
+    do{
+        printf("\n\t\t*******\t\tGestion des etudiants\t\t*******\n\n");
+        printf("\t\t=========================================================\n\n");
+        printf("\t\t<1.  Saisir un etudaint------------------------------ \n");
+        printf("\t\t<2.  Saisir plusiurs etudiants----------------------- \n");
+        printf("\t\t<3.  Afficher la list des etudiants------------------ \n");
+        printf("\t\t<4.  Rechercher un etudiant par numero--------------- \n");
+        printf("\t\t<5.  Rechercher un etudiant par nom------------------ \n");
+        printf("\t\t<6.  Rechercher un etudiants par prenom-------------- \n");
+        printf("\t\t<7.  Afficher les etudiants admet-------------------- \n");
+        printf("\t\t<8.  Afficher les etudiants d'une filiairexxw-------- \n");
+        printf("\t\t<9.  Modifier un etudiant---------------------------- \n");
+        printf("\t\t<10. Supprimier un etudiant-------------------------- \n");
+        printf("\t\t<11. Trier les etudiants----------------------------- \n");
+        printf("\t\t<12.  Quitter---------------------------------------- \n");
+        printf("\t\t=========================================================\n\n");
+        printf("Entre votre choix : ");
+        scanf("%d", &choix);
+        switch(choix) {
+            case 1: system("cls");ajouter_un_etudiant();break;
+            case 2: system("cls");ajouter_plusieur_etudiants();break;
+            case 3: system("cls");afficher_list_des_etudiant();break;
+            case 4: system("cls");recherche_etudiant_par_numero_d_inscription();break;
+            case 5: system("cls");rechercher_un_etudiant_par_nom();break;
+            case 6: system("cls");rechercher_un_etudiant_par_prenom();break;
+            case 7: system("cls");afficher_list_des_etudiant_admis();break;
+            case 8: system("cls");afficher_les_etudiant_d_une_filiere();break;
+            case 9: system("cls");modifier_un_etudiant();break;
+            case 10:system("cls");supprimer_un_etudiant();break;
+            // case 11:system("cls");trierr();break;
+            case 12:system("cls");quitter();break;
+            default : system("cls");printf("votre choix n'est pas valide !!!\n");
         }
 
-        }while(choix!=12);
-
-
-  system("PAUSE>null");
-  return 0;
-  }
+        } while(choix != 12);
+    system("PAUSE>null");
+    return 0;
+}
